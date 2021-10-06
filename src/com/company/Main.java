@@ -4,6 +4,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 
@@ -18,6 +19,9 @@ class WordLength {
 
         //file context reading
         text = FileReading(text, filePath);
+
+        //check that all words` length less than
+        text = WordSubstring(text);
 
         //the longest world
         String longest = TheLongestWorld(text);
@@ -45,7 +49,7 @@ class WordLength {
                 line = br.readLine();
             }
             text = sb.toString();
-        } catch (IOException e) {
+        } catch (IOException| NoSuchElementException |IllegalStateException e) {
             e.printStackTrace();
         } finally {
             br.close();
@@ -54,10 +58,18 @@ class WordLength {
     }
 
     public static String TheLongestWorld(String text) {
-        String longest = Arrays.stream(text.split("[^a-zA-Z0-9]")).max(Comparator.comparingInt(String::length)).orElse(null);
-        int max_length = longest.length();
-        if(max_length < 30)
-        { return longest; }
-        return longest.substring(0, 30);
+        return Arrays.stream(text.split("[^a-zA-Z0-9]")).max(Comparator.comparingInt(String::length)).orElse(null);
+    }
+
+    public static String WordSubstring(String text){
+        StringBuilder new_text = new StringBuilder();
+        for (String word : text.split("[^a-zA-Z0-9]")) {
+            word = word.toLowerCase();
+            if (word.length() > 30) {
+                word = word.substring(0, 30);
+            }
+            new_text.append(word + " ");
+        }
+        return new_text.toString();
     }
 }
